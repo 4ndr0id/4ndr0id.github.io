@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="安卓逆向工具," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文主要记录了如何修改jadx使其支持dex.037">
+<meta name="keywords" content="安卓逆向工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="修改jadx支持dex.037">
+<meta property="og:url" content="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/index.html">
+<meta property="og:site_name" content="4ndr0id blog">
+<meta property="og:description" content="本文主要记录了如何修改jadx使其支持dex.037">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/jadx_error.png">
+<meta property="og:image" content="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/dex035.png">
+<meta property="og:image" content="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/dex037.png">
+<meta property="og:image" content="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/diff.png">
+<meta property="og:image" content="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/dx.jar.png">
+<meta property="og:image" content="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/readheader.png">
+<meta property="og:image" content="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/dexformat.png">
+<meta property="og:image" content="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/return14.png">
+<meta property="og:image" content="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/036.png">
+<meta property="og:image" content="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/037.png">
+<meta property="og:image" content="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/14.png">
+<meta property="og:image" content="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/13.png">
+<meta property="og:updated_time" content="2017-12-01T15:57:55.720Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="修改jadx支持dex.037">
+<meta name="twitter:description" content="本文主要记录了如何修改jadx使其支持dex.037">
+<meta name="twitter:image" content="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/jadx_error.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/"/>
+
+
+
+
+
+  <title>修改jadx支持dex.037 | 4ndr0id blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">4ndr0id blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://4ndr0id.github.io/2017/12/01/修改jadx支持dex-037/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="4ndr0id">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="4ndr0id blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">修改jadx支持dex.037</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-01T22:16:29+08:00">
+                2017-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/手中剑/" itemprop="url" rel="index">
+                    <span itemprop="name">手中剑</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>本文主要记录了如何修改jadx使其支持dex.037</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="前缘"><a href="#前缘" class="headerlink" title="前缘"></a>前缘</h1><p>某次需要分析一台安卓7.1.1的设备，将其framework拖出来后用<a href="https://github.com/skylot/jadx" target="_blank" rel="noopener">jadx</a>反编译,结果报错：<br><img src="jadx_error.png" alt="jadx_error"><br>根据错误提示，可知jadx遇到了无法识别的文件魔数（magic sum），所以抛出异常，程序终止。<br>magic sum 数组与ascii码对应如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">100</th>
+<th style="text-align:center">101</th>
+<th style="text-align:center">120</th>
+<th style="text-align:center">10</th>
+<th style="text-align:center">48</th>
+<th style="text-align:center">51</th>
+<th style="text-align:center">55</th>
+<th style="text-align:center">0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">d</td>
+<td style="text-align:center">e</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">.</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">0</td>
+</tr>
+</tbody>
+</table>
+<p>所以jadx报错的原因，就是其无法识别文件头为dex.037的dex文件。<br>我们常见的dex文件头都是dex.035：<br><img src="dex035.png" alt="dex035"><br>其实在安卓7.0之后，谷歌更新了dex文件，推出了dex.037版本：<br><img src="dex037.png" alt="dex037"><br>谷歌对此次更新的描述如下：<br><img src="diff.png" alt="diff"><br>也就是说，在某种程度上，可以认为dex.037和dex.035没有区别。</p>
+<blockquote>
+<p>关于dex文件格式详见<a href="https://source.android.com/devices/tech/dalvik/dex-format?hl=zh-cn#types" target="_blank" rel="noopener">Dalvik 可执行文件格式</a></p>
+</blockquote>
+<p>通过上面的分析，关于如何修复jadx这个错误,有两个方案：</p>
+<ul>
+<li>一、使用010editor直接修改dex文件头</li>
+<li>二、增加jadx对dex.037的支持</li>
+</ul>
+<p>作为懒鬼，我选第二种。</p>
+<h1 id="后果"><a href="#后果" class="headerlink" title="后果"></a>后果</h1><p>jadx将出错时的函数调用堆栈打印出来，根据输出，定位到出错位置：</p>
+<table><tr><td bgcolor="0x557"><font color="white" size="4">com.android.dex.TableOfContents.readHeader(TableOfContents.java:79) ~[dx-1.10.jar:na]</font></td></tr></table>
+
+<p>dx-1.10.jar应该是jadx使用的一个lib，这个jar包中TableOfContents类的readHeader方法抛出了这个异常。<br>在jadx源码中找到这个jar包，位于jadx/jadx-core/lib/，反编译看一下：<br><img src="dx.jar.png" alt="dx.jar"><br>这看起来就是安卓sdk中/build-tools/(version)/lib下的一个包。</p>
+<blockquote>
+<p>到这里又有了新的思路：jadx引用了安卓sdk中的一个lib来解析dex，可能因为这个lib版本老旧，不支持dex.037；我们是否可以用支持dex.037的新版lib替换掉jadx中的旧版？<br>这个想法我没去验证，有兴趣的同学可以做一下。</p>
+</blockquote>
+<p>找到抛异常的地方：<br><img src="readheader.png" alt="readHeader"><br>readHeader方法判断了DexFormat.magicToApi的返回值，只要不是13就报错。<br>看一下DexFormat.magicToApi方法：<br><img src="dexformat.png" alt="dexformat"><br>很明显，只有文件头是dex.035时函数才会返回13,我们要做的就是修改这个方法，使得文件头是dex.037时也返回13。<br>从jar包中拖出DexFormat.class文件，使用<a href="https://github.com/ingokegel/jclasslib/blob/master/README.md" target="_blank" rel="noopener">jclasslib</a>打开，找到magicToApi方法返回14的地方：<br><img src="return14.png" alt="return14"><br>这两个指令的含义用伪代码表示为：return (int)14；用十六进制字节码表示为：0x10 0x0e 0xac。<br>将其返回值改为13,将VERSION_CURRENT的值改为037即可。<br>用010Editor打开DexFormat.class，将036改为037,将10 0e ac改为10 0d ac：<br><img src="036.png" alt="036">    </p>
+<h2 id=""><a href="#" class="headerlink" title=""></a><img src="037.png" alt="037"></h2><p><img src="14.png" alt="14"><br><img src="13.png" alt="13"><br>替换jar包中的这个文件，重新编译jadx运行，完美支持dex.037。<br>至此，大功告成。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/安卓逆向工具/" rel="tag"># 安卓逆向工具</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="4ndr0id" />
+            
+              <p class="site-author-name" itemprop="name">4ndr0id</p>
+              <p class="site-description motion-element" itemprop="description">走路看天，从不低头</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前缘"><span class="nav-number">1.</span> <span class="nav-text">前缘</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后果"><span class="nav-number">2.</span> <span class="nav-text">后果</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number">2.1.</span> <span class="nav-text"></span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">4ndr0id</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
